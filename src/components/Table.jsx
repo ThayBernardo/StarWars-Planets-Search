@@ -2,10 +2,16 @@ import React, { useContext } from 'react';
 import MyContext from '../MyContext';
 
 function Table() {
-  const { planets } = useContext(MyContext);
+  const { handleChange, filteredName } = useContext(MyContext);
 
   return (
     <div>
+      <input
+        data-testid="name-filter"
+        type="text"
+        placeholder="Search"
+        onChange={ handleChange }
+      />
       <table>
         <thead>
           <tr>
@@ -25,7 +31,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {planets.map((element, index) => (
+          {filteredName.map((element, index) => (
             <tr key={ index }>
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>

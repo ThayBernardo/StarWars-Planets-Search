@@ -4,6 +4,8 @@ import MyContext from './MyContext';
 
 function Provider({ children }) {
   const [planets, setPlanets] = useState([]);
+  const [search, setSearch] = useState('');
+  const [filteredName, setFilteredName] = useState([]);
 
   useEffect(() => {
     const fetchStarWars = async () => {
@@ -11,14 +13,25 @@ function Provider({ children }) {
       const data = await response.json();
       // console.log(data);
       setPlanets(data.results);
+      setFilteredName(data.results);
     };
     fetchStarWars();
   }, []);
 
-  const statePlanets = { planets };
+  useEffect(() => {
+    const filterName = planets.filter((planet) => planet.name
+      .toLowerCase().includes(search));
+    setFilteredName(filterName);
+  }, [search, planets]);
+
+  const handleChange = ({ target }) => {
+    setSearch(target.value);
+  };
+
+  const context = { handleChange, filteredName };
 
   return (
-    <MyContext.Provider value={ statePlanets }>
+    <MyContext.Provider value={ context }>
       { children }
     </MyContext.Provider>
   );

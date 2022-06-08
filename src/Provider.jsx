@@ -5,7 +5,11 @@ import MyContext from './MyContext';
 function Provider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [search, setSearch] = useState('');
-  const [filteredName, setFilteredName] = useState([]);
+  const [filterByName, setFilterByName] = useState([]);
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState(0);
+  const [filterByNumericValues, setFilterByNumericValues] = useState([]);
 
   useEffect(() => {
     const fetchStarWars = async () => {
@@ -13,7 +17,7 @@ function Provider({ children }) {
       const data = await response.json();
       // console.log(data);
       setPlanets(data.results);
-      setFilteredName(data.results);
+      setFilterByName(data.results);
     };
     fetchStarWars();
   }, []);
@@ -21,14 +25,46 @@ function Provider({ children }) {
   useEffect(() => {
     const filterName = planets.filter((planet) => planet.name
       .toLowerCase().includes(search));
-    setFilteredName(filterName);
-  }, [search, planets]);
+
+    const newFilter = filterByNumericValues.reduce((acc, curr) => acc.filter((name) => {
+      const valueNumber = Number(curr.value);
+      switch (curr.comparison) {
+      case 'maior que':
+        return name[curr.column] > valueNumber;
+      case 'menor que':
+        return name[curr.column] < valueNumber;
+      case 'igual a':
+        return Number(name[curr.column]) === valueNumber;
+      default:
+        return 'error';
+      }
+    }), filterName);
+
+    setFilterByName(newFilter);
+  }, [search, planets, filterByNumericValues]);
 
   const handleChange = ({ target }) => {
     setSearch(target.value);
   };
 
-  const context = { handleChange, filteredName };
+  const filterSelect = () => {
+    const numeric = {
+      column,
+      comparison,
+      value,
+    };
+    setFilterByNumericValues([...filterByNumericValues, numeric]);
+  };
+
+  const context = {
+    handleChange,
+    filterByName,
+    filterSelect,
+    setColumn,
+    setComparison,
+    setValue,
+    value,
+  };
 
   return (
     <MyContext.Provider value={ context }>

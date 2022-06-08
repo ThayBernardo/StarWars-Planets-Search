@@ -2,7 +2,14 @@ import React, { useContext } from 'react';
 import MyContext from '../MyContext';
 
 function Table() {
-  const { handleChange, filteredName } = useContext(MyContext);
+  const {
+    handleChange,
+    filterByName,
+    setColumn,
+    setComparison,
+    setValue,
+    filterSelect,
+    value } = useContext(MyContext);
 
   return (
     <div>
@@ -12,6 +19,39 @@ function Table() {
         placeholder="Search"
         onChange={ handleChange }
       />
+      <select
+        onChange={ (({ target }) => setColumn(target.value)) }
+        data-testid="column-filter"
+      >
+        <option>population</option>
+        <option>orbital_period</option>
+        <option>diameter</option>
+        <option>rotation_period</option>
+        <option>surface_water</option>
+      </select>
+      <select
+        onChange={ (({ target }) => setComparison(target.value)) }
+        data-testid="comparison-filter"
+      >
+        <option>maior que</option>
+        <option>menor que</option>
+        <option>igual a</option>
+      </select>
+      <input
+        onChange={ (({ target }) => setValue(target.value)) }
+        type="number"
+        data-testid="value-filter"
+        placeholder="0"
+        value={ value }
+      />
+      <button
+        onClick={ filterSelect }
+        type="button"
+        data-testid="button-filter"
+      >
+        Filter
+
+      </button>
       <table>
         <thead>
           <tr>
@@ -31,7 +71,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {filteredName.map((element, index) => (
+          {filterByName.map((element, index) => (
             <tr key={ index }>
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>

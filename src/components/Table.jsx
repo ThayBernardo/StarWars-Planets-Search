@@ -8,6 +8,7 @@ function Table() {
     setColumn,
     setComparison,
     setValue,
+    option,
     filterSelect,
     value } = useContext(MyContext);
 
@@ -23,11 +24,14 @@ function Table() {
         onChange={ (({ target }) => setColumn(target.value)) }
         data-testid="column-filter"
       >
-        <option>population</option>
+        {/* <option>population</option>
         <option>orbital_period</option>
         <option>diameter</option>
         <option>rotation_period</option>
-        <option>surface_water</option>
+        <option>surface_water</option> */}
+        {option.map((element) => (
+          <option key={ element } value={ element }>{element}</option>
+        ))}
       </select>
       <select
         onChange={ (({ target }) => setComparison(target.value)) }

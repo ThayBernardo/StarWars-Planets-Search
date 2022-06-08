@@ -10,6 +10,13 @@ function Provider({ children }) {
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
   const [filterByNumericValues, setFilterByNumericValues] = useState([]);
+  const [option, setOption] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
 
   useEffect(() => {
     const fetchStarWars = async () => {
@@ -53,7 +60,15 @@ function Provider({ children }) {
       comparison,
       value,
     };
-    setFilterByNumericValues([...filterByNumericValues, numeric]);
+
+    const filtered = [...filterByNumericValues, numeric];
+
+    const newOption = filtered.reduce((acc, curr) => {
+      const newFilter = acc.filter((e) => e !== curr.column);
+      return newFilter;
+    }, option);
+    setOption(newOption);
+    setFilterByNumericValues(filtered);
   };
 
   const context = {
@@ -64,6 +79,7 @@ function Provider({ children }) {
     setComparison,
     setValue,
     value,
+    option,
   };
 
   return (

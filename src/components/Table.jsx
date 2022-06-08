@@ -90,6 +90,7 @@ function Table() {
           ))}
         </tbody>
       </table>
+      <p>Teste avaliador</p>
     </div>
   );
 }
